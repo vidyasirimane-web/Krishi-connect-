@@ -13,6 +13,7 @@ const __dirname = path.dirname(__filename);
 
 // Fix for querySrv ECONNREFUSED issues in some Node.js DNS environments
 dns.setDefaultResultOrder('ipv4first');
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 // Load environment variables
 dotenv.config();
@@ -449,7 +450,7 @@ app.post('/api/orders', async (req, res) => {
 app.use(express.static(path.join(__dirname, 'dist')));
 
 // Fallback all other GET requests to index.html for React SPA routing
-app.get('*', (req, res) => {
+app.get('/{*splat}', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
