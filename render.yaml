@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: krishi-connect
+    env: node
+    buildCommand: npm run render-build
+    startCommand: npm start
+    envVars:
+      - key: MONGODB_URI
+        value: mongodb+srv://vidyasirimane_db_user:123456@cluster0.hdzvoym.mongodb.net/krishi_connect?retryWrites=true&w=majority
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: VITE_API_URL
+        generateValue: false

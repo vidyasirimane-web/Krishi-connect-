@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const API = `http://${window.location.hostname}:5000/api`;
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const StatCard = ({ icon, label, value, color, bg }) => (
   <div style={{

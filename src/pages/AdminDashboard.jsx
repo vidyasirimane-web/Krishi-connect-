@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Users, ShieldCheck, MessageSquare, UserPlus, MapPin, Phone, LogOut, Package, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
   // Using activeFilter to represent both the tab and the filter for users
@@ -14,8 +16,8 @@ const AdminDashboard = () => {
   const loadData = async () => {
     try {
       const [usersRes, productsRes] = await Promise.all([
-        fetch('http://localhost:5000/api/users'),
-        fetch('http://localhost:5000/api/products')
+        fetch(`${API}/users`),
+        fetch(`${API}/products`)
       ]);
       const usersData = await usersRes.json();
       const productsData = await productsRes.json();
@@ -48,7 +50,7 @@ const AdminDashboard = () => {
 
   const handleApprove = async (product) => {
     try {
-      await fetch(`http://localhost:5000/api/products/${product.id}`, {
+      await fetch(`${API}/products/${product.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'Approved' }),
@@ -62,7 +64,7 @@ const AdminDashboard = () => {
 
   const handleReject = async (product) => {
     try {
-      await fetch(`http://localhost:5000/api/products/${product.id}`, {
+      await fetch(`${API}/products/${product.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'Rejected' }),
@@ -76,7 +78,7 @@ const AdminDashboard = () => {
 
   const handleApproveUser = async (user) => {
     try {
-      await fetch(`http://localhost:5000/api/users/${user.id}/status`, {
+      await fetch(`${API}/users/${user.id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'approved' }),
@@ -90,7 +92,7 @@ const AdminDashboard = () => {
 
   const handleRejectUser = async (user) => {
     try {
-      await fetch(`http://localhost:5000/api/users/${user.id}/status`, {
+      await fetch(`${API}/users/${user.id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'rejected' }),
