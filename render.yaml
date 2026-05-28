@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: krishi-connect
+    name: project-meghana
     env: node
     buildCommand: npm run render-build
     startCommand: npm start
