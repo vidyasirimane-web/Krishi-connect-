@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Package, Plus, TrendingUp, Clock, CheckCircle, XCircle, LayoutDashboard,
+  Package, Plus, Clock, CheckCircle, XCircle, LayoutDashboard,
   Camera, Loader2, Sparkles, ShieldCheck, Bell, MessageSquare, Trash2,
   RefreshCw, AlertCircle, IndianRupee, Star, BarChart2, LogOut
 } from 'lucide-react';
@@ -193,7 +193,7 @@ const FarmerDashboard = () => {
         body: JSON.stringify({ status: newStatus }),
       });
       setMyProducts(prev => prev.map(p => p.id === product.id ? { ...p, status: newStatus } : p));
-    } catch (err) { alert('Failed to update status'); }
+  } catch { alert('Failed to update status'); }
   };
 
   const handleSendReply = (chatId) => {

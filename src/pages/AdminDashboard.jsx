@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users, ShieldCheck, MessageSquare, UserPlus, MapPin, Phone, LogOut, Package, AlertCircle } from 'lucide-react';
+import { Users, ShieldCheck, MapPin, Phone, Package, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const API = import.meta.env.VITE_API_URL || '/api';

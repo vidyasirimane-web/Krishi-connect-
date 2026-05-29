@@ -1,35 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, ChevronRight, CheckCircle2, TrendingUp, Users, ShieldCheck, ShoppingBag, ChevronLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
+
+const categories = [
+  { name: 'Vegetables', icon: '🥬' },
+  { name: 'Fruits', icon: '🍎' },
+  { name: 'Cereals', icon: '🌾' },
+  { name: 'Pulses', icon: '🫘' },
+  { name: 'Spices', icon: '🌶️' },
+  { name: 'Others', icon: '📦' },
+];
+
+const products = [
+  { name: 'Fresh Apples', price: '120', unit: '1kg', farmer: 'Anil Kumar', image: '/fresh_apple.png' },
+  { name: 'Potato', price: '32', unit: '1kg', farmer: 'Amit Singh', image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&q=80&w=400' },
+  { name: 'Onion', price: '35', unit: '1kg', farmer: 'Suresh Patil', image: 'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&q=80&w=400' },
+];
+
+const heroImages = [
+  'https://images.unsplash.com/photo-1615485925600-97237c4fc1ec?auto=format&fit=crop&q=80&w=1600',
+  'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&q=80&w=1600',
+  'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&q=80&w=1600',
+  'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&q=80&w=1600',
+  'https://images.unsplash.com/photo-1519999482648-25049ddd37b1?auto=format&fit=crop&q=80&w=1600',
+  'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=1600',
+];
 
 const Home = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
-
-  const categories = [
-    { name: 'Vegetables', icon: '🥬' },
-    { name: 'Fruits', icon: '🍎' },
-    { name: 'Cereals', icon: '🌾' },
-    { name: 'Pulses', icon: '🫘' },
-    { name: 'Spices', icon: '🌶️' },
-    { name: 'Others', icon: '📦' },
-  ];
-
-  const products = [
-    { name: 'Fresh Apples', price: '120', unit: '1kg', farmer: 'Anil Kumar', image: '/fresh_apple.png' },
-    { name: 'Potato', price: '32', unit: '1kg', farmer: 'Amit Singh', image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&q=80&w=400' },
-    { name: 'Onion', price: '35', unit: '1kg', farmer: 'Suresh Patil', image: 'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&q=80&w=400' },
-  ];
-
-  const heroImages = [
-    'https://images.unsplash.com/photo-1615485925600-97237c4fc1ec?auto=format&fit=crop&q=80&w=1600',
-    'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&q=80&w=1600',
-    'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&q=80&w=1600',
-    'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&q=80&w=1600',
-    'https://images.unsplash.com/photo-1519999482648-25049ddd37b1?auto=format&fit=crop&q=80&w=1600',
-    'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=1600',
-  ];
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -182,7 +182,7 @@ const Home = () => {
             <h2 className="text-3xl font-bold">Featured Products</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {products.map((p, i) => (
+            {products.map((p) => (
               <motion.div
                 key={p.name}
                 whileHover={{ y: -10 }}

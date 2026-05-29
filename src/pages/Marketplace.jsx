@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Search, Filter, ShoppingCart, ChevronRight, Star, MapPin, Package, Phone, X, MessageSquare, Send } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Search, Filter, ShoppingCart, Star, MapPin, Phone, X, MessageSquare, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
 
@@ -75,7 +75,7 @@ const Marketplace = () => {
     } else {
       setProducts(allProducts);
     }
-  }, []);
+  }, [searchParams]);
 
   const handlePlaceOrder = (product) => {
     const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');

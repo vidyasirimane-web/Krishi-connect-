@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ShoppingBag, Truck, IndianRupee, Search, Star, Package, Clock,
-  X, TrendingUp, CheckCircle, RefreshCw, Loader2, Building2, LogOut,
-  Filter, BarChart2, MapPin, Phone
+  X, CheckCircle, RefreshCw, Loader2, Building2, LogOut,
+  BarChart2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -49,10 +49,11 @@ const CompanyDashboard = () => {
   const loadData = useCallback(async () => {
     setRefreshing(true);
     try {
-      if (userData) {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+      if (currentUser) {
         const uRes = await fetch(`${API}/users/login`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone: userData.phone, type: userData.type })
+          body: JSON.stringify({ phone: currentUser.phone, type: currentUser.type })
         });
         if (uRes.ok) {
           const u = await uRes.json();
@@ -74,7 +75,12 @@ const CompanyDashboard = () => {
     } finally { setLoading(false); setRefreshing(false); }
   }, []);
 
-  useEffect(() => { if (userData) loadData(); }, [userData, loadData]);
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    if (user && user.type === 'company') {
+      loadData();
+    }
+  }, [loadData]);
 
   const handleLogout = () => { localStorage.removeItem('currentUser'); navigate('/login?type=company'); };
 
@@ -115,47 +121,7 @@ window.dispatchEvent(new StorageEvent('storage', { key: notifKey, newValue: JSON
     finally { setPlacing(false); }
   };
 
-  const handleApprove = async (product) => {
-  try {
-    const res = await fetch(`${API}/products/${product.id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: 'Approved' }),
-    });
-    if (!res.ok) throw new Error('Approve failed');
-    // Add notification for farmer
-    const notifKey = `notifications_${product.farmerPhone}`;
-    const existing = JSON.parse(localStorage.getItem(notifKey) || '[]');
-    existing.push({ type: 'approval', productId: product.id, message: `Your product ${product.name} was approved.` });
-    localStorage.setItem(notifKey, JSON.stringify(existing));
-    window.dispatchEvent(new StorageEvent('storage', { key: notifKey, newValue: JSON.stringify(existing) }));
-    await loadData();
-  } catch (err) {
-    console.error(err);
-    alert('Unable to approve product');
-  }
-};
 
-const handleReject = async (product) => {
-  try {
-    const res = await fetch(`${API}/products/${product.id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: 'Rejected' }),
-    });
-    if (!res.ok) throw new Error('Reject failed');
-    // Add notification for farmer
-    const notifKey = `notifications_${product.farmerPhone}`;
-    const existing = JSON.parse(localStorage.getItem(notifKey) || '[]');
-    existing.push({ type: 'rejection', productId: product.id, message: `Your product ${product.name} was rejected.` });
-    localStorage.setItem(notifKey, JSON.stringify(existing));
-    window.dispatchEvent(new StorageEvent('storage', { key: notifKey, newValue: JSON.stringify(existing) }));
-    await loadData();
-  } catch (err) {
-    console.error(err);
-    alert('Unable to reject product');
-  }
-};
 
 const totalSpend = orders.reduce((s, o) => s + (o.totalPrice || 0), 0);
   const activeOrders = orders.filter(o => o.status === 'Processing' || o.status === 'In Transit').length;
