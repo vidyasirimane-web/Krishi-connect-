@@ -193,7 +193,31 @@ const FarmerDashboard = () => {
         body: JSON.stringify({ status: newStatus }),
       });
       setMyProducts(prev => prev.map(p => p.id === product.id ? { ...p, status: newStatus } : p));
-  } catch (err) { alert('Failed to update status: ' + err.message); }
+    } catch (err) {
+      alert('Failed to update status: ' + err.message);
+    }
+  };
+
+  const handleDeleteProduct = async (product) => {
+    if (!window.confirm(`Are you sure you want to delete "${product.name}"?`)) return;
+    try {
+      const res = await fetch(`${API}/products/${product.id}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) {
+        throw new Error('Failed to delete product from database');
+      }
+      
+      // Also delete from local storage if it exists (products_phone key)
+      const localKey = `products_${userData.phone}`;
+      const localProducts = JSON.parse(localStorage.getItem(localKey) || '[]');
+      const updatedLocal = localProducts.filter(p => p.id !== product.id);
+      localStorage.setItem(localKey, JSON.stringify(updatedLocal));
+
+      setMyProducts(prev => prev.filter(p => p.id !== product.id));
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   const handleSendReply = (chatId) => {
@@ -414,13 +438,23 @@ const FarmerDashboard = () => {
                                   <div><span style={{ color: '#94a3b8', fontWeight: '700' }}>Grade: </span><span style={{ fontWeight: '800', color: '#16a34a' }}>{p.quality}</span></div>
                                   <div style={{ gridColumn: '1 / -1', display: 'flex', alignItems: 'center', gap: '4px', color: '#f59e0b', fontWeight: '800' }}><Star size={12} fill="currentColor" /> {p.rating || '4.5'}</div>
                                 </div>
-                                <button onClick={() => handleToggleStatus(p)}
-                                  style={{ width: '100%', padding: '8px', borderRadius: '10px', border: '1.5px solid #e2e8f0', background: 'white', cursor: 'pointer', fontSize: '0.72rem', fontWeight: '800', color: '#64748b', fontFamily: 'inherit', transition: 'all 0.2s ease' }}
-                                  onMouseEnter={e => { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.borderColor = '#cbd5e1'; }}
-                                  onMouseLeave={e => { e.currentTarget.style.background = 'white'; e.currentTarget.style.borderColor = '#e2e8f0'; }}
-                                >
-                                  {p.status === 'Hold' ? '🟢 Set Live' : '⏸ Put on Hold'}
-                                </button>
+                                <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
+                                  <button onClick={() => handleToggleStatus(p)}
+                                    style={{ flex: 1, padding: '8px', borderRadius: '10px', border: '1.5px solid #e2e8f0', background: 'white', cursor: 'pointer', fontSize: '0.72rem', fontWeight: '800', color: '#64748b', fontFamily: 'inherit', transition: 'all 0.2s ease' }}
+                                    onMouseEnter={e => { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.borderColor = '#cbd5e1'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.background = 'white'; e.currentTarget.style.borderColor = '#e2e8f0'; }}
+                                  >
+                                    {p.status === 'Hold' ? '🟢 Set Live' : '⏸ Hold'}
+                                  </button>
+                                  <button onClick={() => handleDeleteProduct(p)}
+                                    style={{ padding: '8px 12px', borderRadius: '10px', border: '1.5px solid #fecaca', background: '#fef2f2', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444', transition: 'all 0.2s ease' }}
+                                    onMouseEnter={e => { e.currentTarget.style.background = '#fee2e2'; e.currentTarget.style.borderColor = '#fca5a5'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.background = '#fef2f2'; e.currentTarget.style.borderColor = '#fecaca'; }}
+                                    title="Delete Product"
+                                  >
+                                    <Trash2 size={14} />
+                                  </button>
+                                </div>
                               </div>
                             </motion.div>
                           ))}

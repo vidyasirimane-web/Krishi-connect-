@@ -3,6 +3,8 @@ import { Search, Filter, ShoppingCart, Star, MapPin, Phone, X, MessageSquare, Se
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
 
+const API = import.meta.env.VITE_API_URL || '/api';
+
 const Marketplace = () => {
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -50,31 +52,51 @@ const Marketplace = () => {
     if (urlSearch) setSearchQuery(urlSearch);
     if (urlCategory) setSelectedCategory(urlCategory);
 
-    const allProducts = [];
-    const keys = Object.keys(localStorage);
-    keys.forEach(key => {
-      if (key.startsWith('products_')) {
-        const farmerProducts = JSON.parse(localStorage.getItem(key) || '[]');
-        const phone = key.replace('products_', '');
-        const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-        const farmer = users.find(u => u.phone === phone);
-        farmerProducts.forEach(p => {
-          if (p.status === 'Approved' || p.status === 'Unverified') {
-            allProducts.push({ ...p, farmerName: farmer?.name || 'Local Farmer', village: farmer?.village || 'Unknown', farmerPhone: farmer?.phone || '' });
+    const loadProducts = async () => {
+      try {
+        const res = await fetch(`${API}/products`);
+        if (res.ok) {
+          const data = await res.json();
+          // Filter to only display Approved or Unverified products on marketplace
+          const activeProducts = data.filter(p => p.status === 'Approved' || p.status === 'Unverified');
+          if (activeProducts.length > 0) {
+            setProducts(activeProducts);
+            return;
           }
-        });
+        }
+      } catch (err) {
+        console.error('Failed to fetch products from backend:', err);
       }
-    });
 
-    if (allProducts.length === 0) {
-      setProducts([
-        { id: 1, name: 'Organic Tomato', price: 58, unit: 'kg', stock: 500, farmerName: 'Rajesh Kumar', village: 'Sonipat', farmerPhone: '9876543210', image: 'https://images.unsplash.com/photo-1595855759920-86582396756a?auto=format&fit=crop&w=600&q=80' },
-        { id: 2, name: 'Premium Potato', price: 32, unit: 'kg', stock: 1200, farmerName: 'Amit Singh', village: 'Hissar', farmerPhone: '9122334455', image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=600&q=80' },
-        { id: 3, name: 'Red Onion', price: 35, unit: 'kg', stock: 800, farmerName: 'Suresh Patil', village: 'Nashik', farmerPhone: '9822334455', image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=600&q=80' },
-      ]);
-    } else {
-      setProducts(allProducts);
-    }
+      // Fallback to localStorage
+      const allProducts = [];
+      const keys = Object.keys(localStorage);
+      keys.forEach(key => {
+        if (key.startsWith('products_')) {
+          const farmerProducts = JSON.parse(localStorage.getItem(key) || '[]');
+          const phone = key.replace('products_', '');
+          const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+          const farmer = users.find(u => u.phone === phone);
+          farmerProducts.forEach(p => {
+            if (p.status === 'Approved' || p.status === 'Unverified') {
+              allProducts.push({ ...p, farmerName: farmer?.name || 'Local Farmer', village: farmer?.village || 'Unknown', farmerPhone: farmer?.phone || '' });
+            }
+          });
+        }
+      });
+
+      if (allProducts.length === 0) {
+        setProducts([
+          { id: 1, name: 'Organic Tomato', price: 58, unit: 'kg', stock: 500, farmerName: 'Rajesh Kumar', village: 'Sonipat', farmerPhone: '9876543210', image: 'https://images.unsplash.com/photo-1595855759920-86582396756a?auto=format&fit=crop&w=600&q=80' },
+          { id: 2, name: 'Premium Potato', price: 32, unit: 'kg', stock: 1200, farmerName: 'Amit Singh', village: 'Hissar', farmerPhone: '9122334455', image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=600&q=80' },
+          { id: 3, name: 'Red Onion', price: 35, unit: 'kg', stock: 800, farmerName: 'Suresh Patil', village: 'Nashik', farmerPhone: '9822334455', image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=600&q=80' },
+        ]);
+      } else {
+        setProducts(allProducts);
+      }
+    };
+
+    loadProducts();
   }, [searchParams]);
 
   const handlePlaceOrder = (product) => {

@@ -410,6 +410,18 @@ app.patch('/api/products/:id', async (req, res) => {
   }
 });
 
+// Delete product
+app.delete('/api/products/:id', async (req, res) => {
+  const productId = parseInt(req.params.id);
+  try {
+    const product = await Product.findOneAndDelete({ id: productId });
+    if (!product) return res.status(404).json({ error: 'Product not found' });
+    res.json({ success: true, message: 'Product deleted successfully', product });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete product', details: error.message });
+  }
+});
+
 // ==========================================
 // ORDERS API ENDPOINTS
 // ==========================================
