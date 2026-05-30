@@ -29,8 +29,40 @@ const PORT = process.env.PORT || 5000;
 const DATA_FILE = './data.json';
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/krishi_connect';
 
+// Global variable to cache the MongoDB connection promise for serverless environments
+let dbConnectionPromise = null;
+
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
+
+// Middleware to ensure database connection is fully established before serving API requests
+const ensureDbConnected = async (req, res, next) => {
+  try {
+    if (mongoose.connection.readyState === 1) {
+      return next();
+    }
+    console.log('🔄 Database connection is not ready. Awaiting connection...');
+    if (!dbConnectionPromise) {
+      dbConnectionPromise = mongoose.connect(MONGODB_URI).then(async (m) => {
+        console.log('🚀 Connected to MongoDB successfully (lazy-loaded)');
+        return m;
+      });
+    }
+    const conn = await dbConnectionPromise;
+    if (!conn) {
+      // Re-initiate connection if previous attempt failed or returned null
+      dbConnectionPromise = mongoose.connect(MONGODB_URI);
+      await dbConnectionPromise;
+    }
+    next();
+  } catch (error) {
+    console.error('❌ Database connection middleware failed:', error.message);
+    res.status(500).json({ error: 'Database connection failed', details: error.message });
+  }
+};
+
+// Mount the database check middleware for all API endpoints
+app.use('/api', ensureDbConnected);
 
 const API_KEY = process.env.GEMINI_API_KEY || '';
 
@@ -213,16 +245,19 @@ async function seedDefaultDataIfNeeded() {
   }
 }
 
-// Connect to MongoDB Database
-mongoose.connect(MONGODB_URI)
-  .then(async () => {
-    console.log('🚀 Connected to MongoDB successfully');
+// Connect to MongoDB Database (initiate connection on startup)
+dbConnectionPromise = mongoose.connect(MONGODB_URI)
+  .then(async (m) => {
+    console.log('🚀 Connected to MongoDB successfully (on startup)');
     await migrateDbIfNeeded();
     await seedDefaultDataIfNeeded();
+    return m;
   })
   .catch(err => {
-    console.error('❌ Failed to connect to MongoDB:', err.message);
+    console.error('❌ Failed to connect to MongoDB on startup:', err.message);
     console.warn('⚠️ Server will remain running so deployment does not fail, but database features will not work until the connection is fixed.');
+    dbConnectionPromise = null; // Reset promise so middleware can retry
+    return null;
   });
 
 // Health Check
