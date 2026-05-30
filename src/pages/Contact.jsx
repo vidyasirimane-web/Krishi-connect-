@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Mail, Phone, MapPin, Send, MessageSquare } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -42,6 +43,12 @@ const Contact = () => {
   return (
     <div className="pt-32 pb-20 fade-in">
       <div className="container">
+        {/* Back Link */}
+        <div className="mb-6 max-w-5xl mx-auto">
+          <Link to="/" className="inline-flex items-center gap-2 text-slate-500 hover:text-emerald-600 font-bold transition-all text-sm no-underline">
+            ← Back to Home
+          </Link>
+        </div>
         <div className="text-center max-w-2xl mx-auto mb-16">
           <h1 className="text-4xl font-bold mb-4">Get In Touch</h1>
           <p className="text-text-light italic">Have questions? We're here to help you connect and grow.</p>

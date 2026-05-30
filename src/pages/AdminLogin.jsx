@@ -23,7 +23,11 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="pt-32 pb-20 min-h-screen flex items-center justify-center bg-slate-50">
+    <div className="pt-32 pb-20 min-h-screen flex items-center justify-center bg-slate-50 relative">
+      <button onClick={() => navigate('/')} className="absolute top-8 left-8 flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-all shadow-sm z-10"
+        style={{ cursor: 'pointer' }}>
+        ← Back to Home
+      </button>
       <motion.div 
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}

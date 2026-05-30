@@ -130,10 +130,17 @@ const AdminDashboard = () => {
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '32px' }}>
-          <div>
-            <h1 style={{ fontSize: '2rem', fontWeight: '900', color: '#1e293b', marginBottom: '8px', letterSpacing: '-0.02em' }}>Admin Control Center</h1>
-            <p style={{ color: '#64748b', fontSize: '1rem', fontWeight: '500' }}>System oversight & Verification Management</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <button onClick={() => navigate('/')} style={{ padding: '8px 14px', borderRadius: '10px', border: '1.5px solid #e2e8f0', background: 'white', cursor: 'pointer', fontWeight: '700', fontSize: '0.8rem', color: '#64748b', fontFamily: 'inherit', display: 'inline-flex', alignItems: 'center', gap: '6px', transition: 'all 0.2s' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = '#10b981'; e.currentTarget.style.color = '#10b981'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.color = '#64748b'; }}>
+              ← Home
+            </button>
+            <div>
+              <h1 style={{ fontSize: '2rem', fontWeight: '900', color: '#1e293b', marginBottom: '8px', letterSpacing: '-0.02em', margin: 0 }}>Admin Control Center</h1>
+              <p style={{ color: '#64748b', fontSize: '1rem', fontWeight: '500' }}>System oversight & Verification Management</p>
+            </div>
           </div>
           <button onClick={handleLogout} style={{ 
             padding: '8px 20px', 

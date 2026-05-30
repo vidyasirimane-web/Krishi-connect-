@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { ShieldCheck, Users, TrendingUp, Globe } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const About = () => {
   const values = [
@@ -12,6 +13,12 @@ const About = () => {
   return (
     <div className="pt-32 pb-20 fade-in">
       <div className="container">
+        {/* Back Link */}
+        <div className="mb-6">
+          <Link to="/" className="inline-flex items-center gap-2 text-slate-500 hover:text-emerald-600 font-bold transition-all text-sm no-underline">
+            ← Back to Home
+          </Link>
+        </div>
         <header className="text-center max-w-3xl mx-auto mb-16">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}

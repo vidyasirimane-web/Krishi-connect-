@@ -84,7 +84,7 @@ const CompanyDashboard = () => {
 
   const handleLogout = () => { localStorage.removeItem('currentUser'); navigate('/login?type=company'); };
 
-  const filteredProducts = products.filter(p =>
+  const filteredProducts = products.filter(p => p.status === 'Approved').filter(p =>
     p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     (p.farmerName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
     (p.village || '').toLowerCase().includes(searchQuery.toLowerCase())
@@ -151,8 +151,13 @@ const totalSpend = orders.reduce((s, o) => s + (o.totalPrice || 0), 0);
       {/* Header */}
       <div style={{ background: 'white', borderBottom: '1px solid #e2e8f0' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '20px 24px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <button onClick={() => navigate('/')} style={{ padding: '8px 14px', borderRadius: '10px', border: '1.5px solid #e2e8f0', background: 'white', cursor: 'pointer', fontWeight: '700', fontSize: '0.8rem', color: '#64748b', fontFamily: 'inherit', display: 'inline-flex', alignItems: 'center', gap: '6px', transition: 'all 0.2s' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = '#2563eb'; e.currentTarget.style.color = '#2563eb'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.color = '#64748b'; }}>
+              ← Home
+            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'linear-gradient(135deg,#2563eb,#1d4ed8)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Building2 size={22} color="white" />
               </div>

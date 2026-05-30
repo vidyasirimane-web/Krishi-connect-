@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, CheckCircle2, TrendingUp, Users, ShieldCheck, ShoppingBag, ChevronLeft } from 'lucide-react';
+import { ChevronRight, CheckCircle2, TrendingUp, Users, ShieldCheck, ShoppingBag, ChevronLeft, LayoutDashboard, Building2, Shield } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const categories = [
@@ -129,6 +129,7 @@ const Home = () => {
           </motion.p>
         </div>
       </section>
+
 
       {/* Categories */}
       <section className="py-20 bg-white">

@@ -264,8 +264,14 @@ const FarmerDashboard = () => {
       {/* Top Header Bar */}
       <div style={{ background: 'white', borderBottom: '1px solid #e2e8f0', padding: '20px 0' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div>
-            <h1 style={{ fontSize: '1.6rem', fontWeight: '900', color: '#0f172a', letterSpacing: '-0.03em' }}>Farmer Dashboard</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <button onClick={() => navigate('/')} style={{ padding: '8px 14px', borderRadius: '10px', border: '1.5px solid #e2e8f0', background: 'white', cursor: 'pointer', fontWeight: '700', fontSize: '0.8rem', color: '#64748b', fontFamily: 'inherit', display: 'inline-flex', alignItems: 'center', gap: '6px', transition: 'all 0.2s' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = '#16a34a'; e.currentTarget.style.color = '#16a34a'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.color = '#64748b'; }}>
+              ← Home
+            </button>
+            <div>
+              <h1 style={{ fontSize: '1.6rem', fontWeight: '900', color: '#0f172a', letterSpacing: '-0.03em' }}>Farmer Dashboard</h1>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
               <span style={{ fontSize: '0.875rem', color: '#64748b' }}>Welcome back, </span>
               <span style={{ fontSize: '0.875rem', fontWeight: '800', color: '#16a34a' }}>{userData?.name || 'Farmer'}</span>
@@ -274,6 +280,7 @@ const FarmerDashboard = () => {
                 {userData?.status === 'approved' ? 'Verified' : 'Pending'}
               </span>
             </div>
+          </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <button onClick={() => loadData(userData)} disabled={refreshing} style={{ padding: '9px 16px', borderRadius: '10px', border: '1.5px solid #e2e8f0', background: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '600', fontSize: '0.8rem', color: '#64748b', fontFamily: 'inherit' }}>
